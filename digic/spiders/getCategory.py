@@ -26,12 +26,7 @@ class categoryscraper(scrapy.Spider):
             address = brickset.css(address_selector).extract()
             pprint.pprint(namep)
             name_list.append(namep[0].strip())
-
             address_list.append(address[0].strip())
-            print('name ===== > ' , len(name_list))
-            print('address ===> ' , len(address_list))
-        pprint.pprint(name_list)
-        pprint.pprint(address_list)
 
         with open('E:/categories.csv', 'a', newline='', encoding="utf-16") as csvoutput:
             writer = csv.writer(csvoutput, quotechar='|', quoting=csv.QUOTE_MINIMAL)
