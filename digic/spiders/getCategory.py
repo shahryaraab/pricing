@@ -1,15 +1,6 @@
 import scrapy
 import csv
 import itertools
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-import pprint
-import urllib.request
-
 # run spider with ==> scrapy crawl geturl
 class categoryscraper(scrapy.Spider):
     name = 'get_path'

@@ -5,15 +5,8 @@ import pprint
 import scrapy
 import csv
 import itertools
-import pprint
 import urllib.request
 from hashids import Hashids
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
 from xlrd import open_workbook
 import json
 from datetime import datetime
@@ -34,7 +27,6 @@ class BrickSetSpider(scrapy.Spider):
             start_urls.append(value)
 
     start_urls = start_urls[:]
-    # pprint.pprint(start_urls)
     iterator = 0
     start_SKU = int(input("please enter the start number : "))
     data_attr_value = []
@@ -53,16 +45,8 @@ class BrickSetSpider(scrapy.Spider):
     product_category = []
     product_brand = []
 
-
-    # def __init__(self):
-    #     self.driver = webdriver.Chrome("E:/scrapy/chromedriver.exe")
-
     def parse(self, response):
-        # self.driver.get(response.url)
-
         hashids = Hashids(salt='yp',min_length=7,alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ1234567890')
-        # indexxx = self.start_urls.index(response.url)
-
         #selector set for get main product data
         Product_Detail_Selector = '.c-product__info'
         Image_Selector ='.c-gallery '
@@ -71,7 +55,6 @@ class BrickSetSpider(scrapy.Spider):
         attr_value_selector = ".c-params__list-value"
         Product_Price_Selector =".c-product__seller-price-real"
         desc_selector =".c-content-expert__summary"
-
 
         att_list= []
         value_list =[]
@@ -94,7 +77,6 @@ class BrickSetSpider(scrapy.Spider):
         stock_title_list= ['']
 
 # ********************************************************************
-
         #get main product data
         for brickset in response.css(Product_Detail_Selector):
             nameSelector = 'div h1::text'
@@ -171,9 +153,7 @@ class BrickSetSpider(scrapy.Spider):
 # **************************************save image*********************************
         for image in range(0,len(product_image_list[0])) :
                 product_image_350_save ,temp = product_image_list[0][image].split('?')
-                # print('image 350 ==  > ',product_image_350_save)
                 if (namep_EN is not None):
-                    # namep_EN  = [w.replace('-', '') for w in namep_EN]
                     namep_EN  = [w.replace(' ', '-') for w in namep_EN]
                     namep_EN = [w.replace('.', '-') for w in namep_EN]
                     namep_EN = [w.replace('(', '-') for w in namep_EN]
@@ -186,7 +166,6 @@ class BrickSetSpider(scrapy.Spider):
                     pro_img_title ="E:/digikala_digital_product/product_photo1/"+name
                 else :
                     pro_img_title ="E:/digikala_digital_product/product_photo1/"
-                    # print(' ======== ' , pro_img_title)
                 pro_img_title +='-YP-'
                 pro_img_title += str(sku).strip()
                 pro_img_title += '-'
@@ -194,9 +173,8 @@ class BrickSetSpider(scrapy.Spider):
                 pro_img_title += '.jpg'
                 iter +=1
             # create path to save image
-                # pprint.pprint(pro_img_title)
                 product_image_list_print.append(pro_img_title)
-            # download images to Photo directory
+            # download first image to the Photo directory
                 if (iter == 1):
                     urllib.request.urlretrieve(product_image_350_save , pro_img_title)
 
@@ -232,7 +210,6 @@ class BrickSetSpider(scrapy.Spider):
             if(len(value_list[index])!=0):
                 if(index is not 0):
                     attt += ','
-                # print('index ' , index)
                 attribute[str(value_list[index][0]).strip()] = []
                 attribute[str(value_list[index][0]).strip()].append(str(att_list[index][0]).strip())
                 attt += str(value_list[index][0]).strip()
@@ -243,34 +220,14 @@ class BrickSetSpider(scrapy.Spider):
 
             else :
                 if(len(att_list[index])>0):
-                    # print('index ' , index)
                     attt += '</br>'
                     attt += str(att_list[index][0]).strip()
-                    # print('str(value_list[item][0] = ',str(value_list[index]))
-                    # print('str(value_list[item-1][0] = ',str(value_list[last][0]))
-
                     attribute[str(value_list[last][0]).strip()].append(str(att_list[index][0]).strip())
                     index +=1
-
-
-        # print('attribute = >' ,attribute)
-# ********************************************************************
-        # self.product_data.append(product_data_list[0])
-        # self.product_data_en.append(product_data_list[1])
-        # self.product_sku_list.append(product_sku[0])
-        # self.product_image.append(product_image_list_print)
-        # self.data_attr.append(attt)
-        # # self.data_attr_value.append(attr_value)
-        # self.product_description.append(pro_description)
-        # self.product_price.append(product_data_list[2])
-        # self.product_category.append(category_list)
-        # self.product_brand.append(brand_list)
-
 
         if (len(pro_price)==0):
             pro_price.append([''])
 
-        # print('=======',pro_price[0])
         time = datetime.now()
         timesave  =time.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
         pro = {}
@@ -298,7 +255,6 @@ class BrickSetSpider(scrapy.Spider):
         with open('E:/digikala_digital_product/data.json', 'w', encoding='utf-8') as f:
             json.dump(self.mainpro, f, ensure_ascii=False, indent=4, default=str)
 
-
         print_data = ['']
         print_data[0] += product_sku[0]
         print_data[0] += '\t'
@@ -321,7 +277,6 @@ class BrickSetSpider(scrapy.Spider):
             print_data[0] += str(product_image_list_print[1:])
         else:
             print_data[0] += '\t'
-
 
         with open('E:/digikala_digital_product/product_data.csv', 'a', newline='', encoding="utf-16") as csvoutput:
             writer = csv.writer(csvoutput, quotechar='|', quoting=csv.QUOTE_MINIMAL)
