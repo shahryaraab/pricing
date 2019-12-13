@@ -11,7 +11,7 @@ class getUrlscraper(scrapy.Spider):
     start_urls = []
     num_page = []
 
-    wb = open_workbook('E:/digikala_digital_product/link_page.xlsx')
+    wb = open_workbook('E:/products/flormar/link_page.xlsx')
     for sheet in wb.sheets():
         number_of_rows = sheet.nrows
         number_of_columns = sheet.ncols
@@ -60,7 +60,7 @@ class getUrlscraper(scrapy.Spider):
                 product_data[0] += '\n'
 
         # # write name , price and image path to csv file
-            with open('E:/digikala_digital_product/links.csv', 'a', newline='', encoding="utf-16") as csvoutput:
+            with open('E:/products/flormar/links.csv', 'a', newline='', encoding="utf-16") as csvoutput:
                 writer = csv.writer(csvoutput, quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 for val in product_data:
                     if (val is not None):

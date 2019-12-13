@@ -26,7 +26,10 @@ class BrickSetSpider(scrapy.Spider):
         if (str(value).strip()  != ''):
             start_urls.append(value)
 
-    start_urls = start_urls[:]
+    started_index = 9700
+    end_index = 15000
+    num_product = end_index - started_index
+    start_urls = start_urls[started_index:end_index]
     iterator = 0
     start_SKU = int(input("please enter the start number : "))
     data_attr_value = []
@@ -163,9 +166,9 @@ class BrickSetSpider(scrapy.Spider):
                     split_name = [w.replace('/', '-') for w in namep_EN]
                     name=''
                     name = ''.join(split_name)
-                    pro_img_title ="E:/digikala_digital_product/product_photo1/"+name
+                    pro_img_title ="E:/digikala_digital_product/product-9700/product_photo/"+name
                 else :
-                    pro_img_title ="E:/digikala_digital_product/product_photo1/"
+                    pro_img_title ="E:/digikala_digital_product/product-9700/product_photo/"
                 pro_img_title +='-YP-'
                 pro_img_title += str(sku).strip()
                 pro_img_title += '-'
@@ -252,7 +255,7 @@ class BrickSetSpider(scrapy.Spider):
         pro['attribute_list'] = attribute
         self.mainpro.append(pro)
 
-        with open('E:/digikala_digital_product/data.json', 'w', encoding='utf-8') as f:
+        with open('E:/digikala_digital_product/product-9700/data.json', 'w', encoding='utf-8') as f:
             json.dump(self.mainpro, f, ensure_ascii=False, indent=4, default=str)
 
         print_data = ['']
@@ -278,10 +281,10 @@ class BrickSetSpider(scrapy.Spider):
         else:
             print_data[0] += '\t'
 
-        with open('E:/digikala_digital_product/product_data.csv', 'a', newline='', encoding="utf-16") as csvoutput:
+        with open('E:/digikala_digital_product/product-9700/product_data.csv', 'a', newline='', encoding="utf-16") as csvoutput:
             writer = csv.writer(csvoutput, quotechar='|', quoting=csv.QUOTE_MINIMAL)
             for val in print_data :
                 writer.writerow([val])
         print('===========================================================')
-        print('product == > ', self.iterator , ' of ' , self.number_of_rows )
-        print((self.iterator / self.number_of_rows)*100 ,' % complete')
+        print('product == > ', self.iterator , ' of ' , self.num_product )
+        print((self.iterator / self.num_product)*100 ,' % complete')
