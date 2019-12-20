@@ -16,7 +16,7 @@ class BrickSetSpider(scrapy.Spider):
     name = 'get_pro'
     start_urls = []
     mainpro = []
-    wb = open_workbook('E:/digikala_digital_product/links.xlsx')
+    wb = open_workbook('E:/bug/links.xlsx')
     for sheet in wb.sheets():
         number_of_rows = sheet.nrows
         number_of_columns = sheet.ncols
@@ -29,7 +29,7 @@ class BrickSetSpider(scrapy.Spider):
     started_index = 9700
     end_index = 15000
     num_product = end_index - started_index
-    start_urls = start_urls[started_index:end_index]
+    start_urls = start_urls[:]
     iterator = 0
     start_SKU = int(input("please enter the start number : "))
     data_attr_value = []
@@ -166,9 +166,9 @@ class BrickSetSpider(scrapy.Spider):
                     split_name = [w.replace('/', '-') for w in namep_EN]
                     name=''
                     name = ''.join(split_name)
-                    pro_img_title ="E:/digikala_digital_product/product-9700/product_photo/"+name
+                    pro_img_title ="E:/bug/product_photo/"+name
                 else :
-                    pro_img_title ="E:/digikala_digital_product/product-9700/product_photo/"
+                    pro_img_title ="E:/bug/product_photo/"
                 pro_img_title +='-YP-'
                 pro_img_title += str(sku).strip()
                 pro_img_title += '-'
@@ -189,6 +189,7 @@ class BrickSetSpider(scrapy.Spider):
             value_list.append(att_value)
             # pprint.pprint(att_value)
 
+        # print('======================')
         #get attribute key
         for brickset3 in response.css(attr_value_selector):
             Attribute_value_Selector = 'span::text ,  span a::text'
@@ -203,13 +204,13 @@ class BrickSetSpider(scrapy.Spider):
 
                 att_key[index] = blank_str
             att_list.append(att_key)
-            # pprint.pprint(att_key)
-
+        # pprint.pprint(att_list)
         attt = ''
         attribute = {}
         index = 0
         last = 0
-        for item in range(0 , len(att_list)-1):
+
+        for item in range(0 , len(att_list)):
             if(len(value_list[index])!=0):
                 if(index is not 0):
                     attt += ','
@@ -220,14 +221,14 @@ class BrickSetSpider(scrapy.Spider):
                 attt += str(att_list[index][0]).strip()
                 last = index
                 index +=1
-
             else :
                 if(len(att_list[index])>0):
                     attt += '</br>'
                     attt += str(att_list[index][0]).strip()
                     attribute[str(value_list[last][0]).strip()].append(str(att_list[index][0]).strip())
                     index +=1
-
+                else:
+                    index +=1
         if (len(pro_price)==0):
             pro_price.append([''])
 
@@ -255,7 +256,7 @@ class BrickSetSpider(scrapy.Spider):
         pro['attribute_list'] = attribute
         self.mainpro.append(pro)
 
-        with open('E:/digikala_digital_product/product-9700/data.json', 'w', encoding='utf-8') as f:
+        with open('E:/bug/data.json', 'w', encoding='utf-8') as f:
             json.dump(self.mainpro, f, ensure_ascii=False, indent=4, default=str)
 
         print_data = ['']
@@ -281,7 +282,7 @@ class BrickSetSpider(scrapy.Spider):
         else:
             print_data[0] += '\t'
 
-        with open('E:/digikala_digital_product/product-9700/product_data.csv', 'a', newline='', encoding="utf-16") as csvoutput:
+        with open('E:/bug/product_data.csv', 'a', newline='', encoding="utf-16") as csvoutput:
             writer = csv.writer(csvoutput, quotechar='|', quoting=csv.QUOTE_MINIMAL)
             for val in print_data :
                 writer.writerow([val])
